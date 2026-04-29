@@ -46,28 +46,33 @@ export const obtenerPerfumes = async (req, res, next) => {
 };
 
 export const obtenerPerfumesPorProyeccion = async (req, res, next) => {
-  const { page, limit } = req.query;
-
   try {
+    const { proyeccion } = req.params;
+    const { page = 1, limit = 12 } = req.query;
+
     const respuesta = await obtenerPerfumesPorProyeccionService(
+      proyeccion,
       page,
       limit,
-      req,
     );
+
     res.status(200).json(respuesta);
   } catch (error) {
     next(error);
   }
 };
-export const obtenerPerfumesPorConcentracion = async (req, res, next) => {
-  const { page, limit } = req.query;
 
+export const obtenerPerfumesPorConcentracion = async (req, res, next) => {
   try {
+    const { concentracion } = req.params;
+    const { page = 1, limit = 12 } = req.query;
+
     const respuesta = await obtenerPerfumesPorConcentracionService(
+      concentracion,
       page,
       limit,
-      req,
     );
+
     res.status(200).json(respuesta);
   } catch (error) {
     next(error);

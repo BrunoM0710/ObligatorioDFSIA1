@@ -19,38 +19,50 @@ export const obtenerPerfumePorIdService = async (id) => {
   return perfumeEncontrado || null;
 };
 
-export const obtenerPerfumesPorProyeccionService = async (page, limit, req) => {
-  const proyeccion = req.query.proyeccion;
+export const obtenerPerfumesPorProyeccionService = async (
+  proyeccion,
+  page,
+  limit,
+) => {
+  limit = Number(limit);
+  page = Number(page);
 
-  if (proyeccion) {
-    const campos = proyeccion.split(",").join(" ");
+  const skip = (page - 1) * limit;
 
-    return await Perfume.find()
-      .select(campos)
-      .limit(limit)
-      .skip((page - 1) * limit);
-  }
+  const filtro = {
+    proyeccion: { $regex: `^${proyeccion}$`, $options: "i" },
+  };
 
-  return await obtenerPerfumesService(page, limit);
+  const cantidadPerfumes = await perfume.countDocuments(filtro);
+
+  const totalPages = Math.ceil(cantidadPerfumes / limit);
+
+  const perfumes = await perfume.find(filtro).limit(limit).skip(skip);
+
+  return { perfumes, page, limit, totalPages };
 };
 
 export const obtenerPerfumesPorConcentracionService = async (
+  concentracion,
   page,
   limit,
-  req,
 ) => {
-  const concentracion = req.query.concentracion;
+  limit = Number(limit);
+  page = Number(page);
 
-  if (concentracion) {
-    const campos = concentracion.split(",").join(" ");
+  const skip = (page - 1) * limit;
 
-    return await Perfume.find()
-      .select(campos)
-      .limit(limit)
-      .skip((page - 1) * limit);
-  }
+  const filtro = {
+    concentracion: { $regex: `^${concentracion}$`, $options: "i" },
+  };
 
-  return await obtenerPerfumesService(page, limit);
+  const cantidadPerfumes = await perfume.countDocuments(filtro);
+
+  const totalPages = Math.ceil(cantidadPerfumes / limit);
+
+  const perfumes = await perfume.find(filtro).limit(limit).skip(skip);
+
+  return { perfumes, page, limit, totalPages };
 };
 
 export const altaPerfumeService = async (data) => {

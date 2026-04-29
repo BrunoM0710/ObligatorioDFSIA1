@@ -5,35 +5,12 @@ import {
   eliminarUsuario,
 } from "../controllers/usuario.controller.js";
 
-const router = express.Router({ mergeParams: true });
+const router = express.Router();
 
-//llego a el enrutador con rutas /usuario
+router.get("/:id", obtenerOrdenesUsuario);
 
-router.get("/:id", async (req, res, next) => {
-  try {
-    const data = await obtenerOrdenesUsuario(req.params.id);
-    res.json(data);
-  } catch (error) {
-    next(error);
-  }
-});
+router.delete("/:id", eliminarUsuario);
 
-router.delete("/:id", async (req, res, next) => {
-  try {
-    await eliminarUsuario(req.params.id);
-    res.status(200).json({ message: "Usuario eliminado correctamente" });
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.patch("/:id", async (req, res, next) => {
-  try {
-    const data = await cambioDePlanUsuario(req.params.id, req.body);
-    res.json(data);
-  } catch (error) {
-    next(error);
-  }
-});
+router.patch("/:id", cambioDePlanUsuario);
 
 export default router;
