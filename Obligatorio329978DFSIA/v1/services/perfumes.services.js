@@ -73,12 +73,17 @@ export const altaPerfumeService = async (data) => {
     data.nombre,
     data.marca,
   );
+
   if (existente) {
     const error = new Error("Ya existe un perfume con esa marca y nombre");
     error.statusCode = 409;
     throw error;
   }
-  const imagen = await obtenerImagenPerfume(data.nombre, data.marca);
+
+  const imagen = data.imagen
+    ? data.imagen
+    : await obtenerImagenPerfume(data.nombre, data.marca);
+
   return await perfume.create({ ...data, imagen });
 };
 

@@ -5,6 +5,7 @@ import perfumesRouter from "./routes/perfumes.routes.js";
 import ordenesRouter from "./routes/orden.routes.js";
 import usuariosRouter from "./routes/usuarios.routes.js";
 import decantRouter from "./routes/decant.routes.js";
+import uploadsRouter from "./routes/uploads.routes.js";
 
 const router = express.Router({ mergeParams: true });
 
@@ -21,4 +22,5 @@ router.use("/perfumes", perfumesRouter);
 router.use("/ordenes", ordenesRouter);
 router.use("/usuarios", usuariosRouter);
 router.use("/decant", decantRouter);
+router.use("/uploads", uploadsRouter);
 export default router;

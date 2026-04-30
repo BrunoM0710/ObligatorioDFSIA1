@@ -10,9 +10,35 @@ import {
 } from "../services/perfumes.services.js";
 import { obtenerImagenPerfume } from "../services/unsplash.service.js";
 
+import { upload } from "../middlewares/multer.middleware.js";
+import { runMulterSingle } from "../utils/multer.util.js";
+import { uploadBufferToCloudinary } from "../utils/cloudinary.util.js";
+import cloudinary from "../config/cloudinary.js";
 export const altaPerfume = async (req, res, next) => {
   try {
-    const nuevoPerfume = await altaPerfumeService(req.body);
+    // 👇 procesa imagen si viene
+    await runMulterSingle(upload, "imagen", req, res);
+
+    let imagenUrl = null;
+
+    if (req.file) {
+      const result = await uploadBufferToCloudinary(
+        cloudinary,
+        req.file.buffer,
+        {
+          resource_type: "auto",
+          folder: "perfumes",
+        },
+      );
+
+      imagenUrl = result.secure_url;
+    }
+
+    const nuevoPerfume = await altaPerfumeService({
+      ...req.body,
+      imagen: imagenUrl, // 👈 clave
+    });
+
     return res.status(201).json(nuevoPerfume);
   } catch (error) {
     next(error);
