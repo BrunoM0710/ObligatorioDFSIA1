@@ -16,7 +16,9 @@ export const eliminarDecantService = async (idDecant, idUsuario) => {
   });
 
   if (!decantEliminado) {
-    throw new Error("Decant no encontrado para este usuario");
+    const error = new Error("Decant no encontrado");
+    error.statusCode = 404;
+    throw error;
   }
   await usuario.findByIdAndUpdate(idUsuario, {
     $pull: { decant: idDecant },

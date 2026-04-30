@@ -10,10 +10,10 @@ export const registrarUsuario = async (req, res) => {
 
   const usuarioExistente = await obtenerUsuarioPorEmailService(email);
   if (usuarioExistente) {
-    return res.status(400).json({ message: "El email ya está registrado" });
+    return res.status(409).json({ message: "El email ya está registrado" });
   }
   const { usuario, token } = await registrarUsuarioService(req.body);
-  res.json({
+  res.status(201).json({
     message: `Usuario registrado exitosamente`,
     usuario,
     token,
@@ -27,5 +27,5 @@ export const loginUsuario = async (req, res) => {
     contrasenia,
   );
   if (message) return res.status(400).json({ message });
-  res.json({ message: "Usuario logueado", usuario, token });
+  res.status(200).json({ message: "Usuario logueado", usuario, token });
 };

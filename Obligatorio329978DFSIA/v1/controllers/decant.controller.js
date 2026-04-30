@@ -10,7 +10,7 @@ import {
 } from "../services/decant.services.js";
 
 export const altaDecant = async (req, res) => {
-  try {
+
     const { idUsuario, idPerfume } = req.params;
     const usuario = await obtenerUsuarioPorIdService(idUsuario);
     const perfume = await obtenerPerfumePorIdService(idPerfume);
@@ -20,17 +20,22 @@ export const altaDecant = async (req, res) => {
     );
 
     if (!usuario) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+      const error = new Error("Usuario no encontrado");
+      error.statusCode = 404;
+      throw error;
     }
     if (!perfume) {
-      return res.status(404).json({ message: "Perfume no encontrado" });
+      const error = new Error("Perfume no encontrado");
+      error.statusCode = 404;
+      throw error;
     }
 
     if (usuario.decant.length >= 4 && !usuario.esPremium) {
-      return res.status(403).json({
-        message:
-          "No puedes agregar más decants, actualiza tu estatus a premium",
-      });
+      const error = new Error(
+        "No puedes agregar más decants, actualiza tu estatus a premium",
+      );
+      error.statusCode = 403;
+      throw error;
     }
 
     const nuevoDecant = new decant({
@@ -41,9 +46,7 @@ export const altaDecant = async (req, res) => {
     usuario.decant.push(nuevoDecant._id);
     await usuario.save();
     res.status(201).json(nuevoDecant);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+
 };
 
 export const obtenerDecantUsuario = async (req, res) => {
@@ -72,32 +75,35 @@ export const obtenerDecantUsuario = async (req, res) => {
 export const eliminarDecant = async (req, res) => {
   const { idDecant, idUsuario } = req.params;
 
-  try {
-    const usuarioEncontrado = await obtenerUsuarioPorIdService(idUsuario);
-    if (!usuarioEncontrado) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-
-    const decantUsuario = await obtenerDecantUsuarioService(
-      idUsuario,
-      idDecant,
-    );
-
-    if (!decantUsuario) {
-      return res.status(404).json({
-        message: "Decant no encontrado para este usuario",
-      });
-    }
-
-    await eliminarDecantService(idDecant, idUsuario);
-
-    usuarioEncontrado.decant.pull(idDecant);
-    await usuarioEncontrado.save();
-
-    return res.status(204).json({
-      message: "Decant eliminado correctamente",
-    });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  const usuarioEncontrado = await obtenerUsuarioPorIdService(idUsuario);
+  if (!usuarioEncontrado) {
+    const error = new Error("Usuario no encontrado");
+    error.statusCode = 404;
+    throw error;
   }
+  if (!mongoose.Types.ObjectId.isValid(idDecant)) {
+    const error = new Error("ID de decant no válido");
+    error.statusCode = 400;
+    throw error;
+  }
+  if (!mongoose.Types.ObjectId.isValid(idUsuario)) {
+    const error = new Error("ID de usuario no válido");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const decantUsuario = await obtenerDecantUsuarioService(idUsuario, idDecant);
+
+  if (!decantUsuario) {
+    const error = new Error("Decant no encontrado para este usuario");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  await eliminarDecantService(idDecant, idUsuario);
+
+  usuarioEncontrado.decant.pull(idDecant);
+  await usuarioEncontrado.save();
+
+  return res.status(204).send();
 };

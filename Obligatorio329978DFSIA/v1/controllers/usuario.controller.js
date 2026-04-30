@@ -20,11 +20,16 @@ export const obtenerOrdenesUsuario = async (req, res) => {
   }
 };
 
-export const eliminarUsuario = async (req, res) => {
-  const { id } = req.params;
+export const eliminarUsuario = async (req, res, next) => {
+  try {
+    const { id } = req.params;
 
-  await eliminarUsuarioService(id);
-  res.status(204).json({ message: "Usuario eliminado correctamente" });
+    const usuarioEliminado = await eliminarUsuarioService(id);
+
+    return res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const obtenerDecantUsuario = async (req, res) => {
@@ -32,7 +37,9 @@ export const obtenerDecantUsuario = async (req, res) => {
 
   const decant = await obtenerDecantUsuarioService(id);
   if (!decant) {
-    return res.status(404).json({ message: "Usuario no encontrado" });
+    const error = new Error("Usuario no encontrado");
+    error.statusCode = 404;
+    throw error;
   }
   res.status(200).json(decant);
 };
@@ -41,5 +48,5 @@ export const cambioDePlanUsuario = async (req, res) => {
   const { id } = req.params;
 
   const cambioPlan = await cambioDePlanUsuarioService(id);
-  res.status(200).json(cambioPlan);
+  res.status(204).send();
 };

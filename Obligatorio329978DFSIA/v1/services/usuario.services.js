@@ -2,21 +2,25 @@ import usuario from "../models/usuario.model.js";
 
 export const eliminarUsuarioService = async (id) => {
   const usuarioEncontrado = await usuario.findById(id);
+
+  if (!usuarioEncontrado) {
+    const error = new Error("Usuario no encontrado");
+    error.statusCode = 404;
+    throw error;
+  }
+
   if (
     usuarioEncontrado.ordenes.length > 0 ||
     usuarioEncontrado.decant.length > 0
   ) {
-    throw new Error(
-      "No se puede eliminar un usuario con órdenes o decants pendientes",
+    const error = new Error(
+      "No se puede eliminar un usuario con órdenes o decants pendientes"
     );
+    error.statusCode = 409;
+    throw error;
   }
 
   const usuarioEliminado = await usuario.findByIdAndDelete(id);
-
-  if (!usuarioEliminado) {
-    throw new Error("Usuario no encontrado");
-  }
-
   return usuarioEliminado;
 };
 
@@ -37,16 +41,25 @@ export const obtenerUsuarioPorIdService = async (id) => {
     .findById(id)
     .populate("ordenes")
     .populate("decant");
+  if (!usuarioEncontrado) {
+    const error = new Error("Usuario no encontrado");
+    error.statusCode = 404;
+    throw error;
+  }
   return usuarioEncontrado || null;
 };
 
 export const cambioDePlanUsuarioService = async (id) => {
   const usuarioActualizado = await usuario.findById(id);
   if (!usuarioActualizado) {
-    throw new Error("Usuario no encontrado");
+    const error = new Error("Usuario no encontrado");
+    error.statusCode = 404;
+    throw error;
   }
-  if(usuarioActualizado.decant.length > 4){
-    throw new Error("No se puede cambiar el plan si tiene más de 4 decants");
+  if (usuarioActualizado.decant.length > 4) {
+    const error = new Error("No se puede cambiar el plan si tiene más de 4 decants");
+    error.statusCode = 400;
+    throw error;
   }
   !usuarioActualizado.esPremium
     ? (usuarioActualizado.esPremium = true)

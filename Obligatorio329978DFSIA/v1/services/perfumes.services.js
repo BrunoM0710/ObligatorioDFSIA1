@@ -1,4 +1,5 @@
 import perfume from "../models/perfume.model.js";
+import { obtenerImagenPerfume } from "../services/unsplash.service.js";
 
 export const obtenerPerfumesService = async (page, limit) => {
   limit = Number(limit) || 12; // Valor predeterminado de 12 si no se proporciona
@@ -10,7 +11,9 @@ export const obtenerPerfumesService = async (page, limit) => {
     const perfumes = await perfume.find().limit(limit).skip(skip);
     return { perfumes, page, limit, totalPages };
   } catch (error) {
-    throw new Error(error.message);
+    const errorNuevo = new Error(error.message);
+    errorNuevo.statusCode = 500;
+    throw errorNuevo;
   }
 };
 
@@ -66,7 +69,17 @@ export const obtenerPerfumesPorConcentracionService = async (
 };
 
 export const altaPerfumeService = async (data) => {
-  return await perfume.create(data);
+  const existente = await encontrarPorMarcaYNombreService(
+    data.nombre,
+    data.marca,
+  );
+  if (existente) {
+    const error = new Error("Ya existe un perfume con esa marca y nombre");
+    error.statusCode = 409;
+    throw error;
+  }
+  const imagen = await obtenerImagenPerfume(data.nombre, data.marca);
+  return await perfume.create({ ...data, imagen });
 };
 
 export const actualizarPerfumeService = async (
@@ -80,7 +93,9 @@ export const actualizarPerfumeService = async (
       { new: true },
     );
     if (!perfumeActualizado) {
-      throw new Error("Perfume no encontrado");
+      const error = new Error("Perfume no encontrado");
+      error.statusCode = 404;
+      throw error;
     }
     return perfumeActualizado;
   } catch (error) {
@@ -92,7 +107,9 @@ export const eliminarPerfumeService = async (idPerfume) => {
   try {
     const perfumeEliminado = await perfume.findByIdAndDelete(idPerfume);
     if (!perfumeEliminado) {
-      throw new Error("Perfume no encontrado");
+      const error = new Error("Perfume no encontrado");
+      error.statusCode = 404;
+      throw error;
     }
     return { message: "Perfume eliminado" };
   } catch (error) {
@@ -105,6 +122,8 @@ export const encontrarPorMarcaYNombreService = async (nombre, marca) => {
     const perfumeEncontrado = await perfume.findOne({ nombre, marca });
     return perfumeEncontrado || null;
   } catch (error) {
-    throw new Error(error.message);
+    const errorNuevo = new Error(error.message);
+    errorNuevo.statusCode = 500;
+    throw errorNuevo;
   }
 };
