@@ -1,9 +1,11 @@
 import express from "express";
+import router from "./v1.routes.js"; // 👈 IMPORTANTE
+
 const app = express();
-// Middlewares
+
 app.use(express.json());
-// Rutas
-app.get("/api/hello", (req, res) => {
- res.json({ message: "Hola desde Express con imports " });
-});
+
+
+app.use("/", router);
+
 export default app;
