@@ -9,7 +9,6 @@ import {
   encontrarPorMarcaYNombreService,
 } from "../services/perfumes.services.js";
 import { obtenerImagenPerfume } from "../services/unsplash.service.js";
-
 import { upload } from "../middlewares/multer.middleware.js";
 import { runMulterSingle } from "../utils/multer.util.js";
 import { uploadBufferToCloudinary } from "../utils/cloudinary.util.js";
@@ -36,7 +35,7 @@ export const altaPerfume = async (req, res, next) => {
 
     const nuevoPerfume = await altaPerfumeService({
       ...req.body,
-      imagen: imagenUrl, // 👈 clave
+      imagen: imagenUrl, 
     });
 
     return res.status(201).json(nuevoPerfume);
