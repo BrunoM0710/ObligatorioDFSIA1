@@ -10,43 +10,38 @@ import {
 } from "../services/decant.services.js";
 
 export const altaDecant = async (req, res) => {
+  const { idUsuario, idPerfume } = req.params;
+  const usuario = await obtenerUsuarioPorIdService(idUsuario);
+  const perfume = await obtenerPerfumePorIdService(idPerfume);
+  const decantUsuario = await obtenerDecantUsuarioService(idUsuario, idPerfume);
 
-    const { idUsuario, idPerfume } = req.params;
-    const usuario = await obtenerUsuarioPorIdService(idUsuario);
-    const perfume = await obtenerPerfumePorIdService(idPerfume);
-    const decantUsuario = await obtenerDecantUsuarioService(
-      idUsuario,
-      idPerfume,
+  if (!usuario) {
+    const error = new Error("Usuario no encontrado");
+    error.statusCode = 404;
+    throw error;
+  }
+  if (!perfume) {
+    const error = new Error("Perfume no encontrado");
+    error.statusCode = 404; 
+    throw error;
+  }
+
+  if (usuario.decant.length >= 4 && !usuario.esPremium) {
+    const error = new Error(
+      "No puedes agregar más decants, actualiza tu estatus a premium",
     );
+    error.statusCode = 403;
+    throw error;
+  }
 
-    if (!usuario) {
-      const error = new Error("Usuario no encontrado");
-      error.statusCode = 404;
-      throw error;
-    }
-    if (!perfume) {
-      const error = new Error("Perfume no encontrado");
-      error.statusCode = 404;
-      throw error;
-    }
-
-    if (usuario.decant.length >= 4 && !usuario.esPremium) {
-      const error = new Error(
-        "No puedes agregar más decants, actualiza tu estatus a premium",
-      );
-      error.statusCode = 403;
-      throw error;
-    }
-
-    const nuevoDecant = new decant({
-      usuario: usuario._id,
-      perfume: perfume._id,
-    });
-    await nuevoDecant.save();
-    usuario.decant.push(nuevoDecant._id);
-    await usuario.save();
-    res.status(201).json(nuevoDecant);
-
+  const nuevoDecant = new decant({
+    usuario: usuario._id,
+    perfume: perfume._id,
+  });
+  await nuevoDecant.save();
+  usuario.decant.push(nuevoDecant._id);
+  await usuario.save();
+  res.status(201).json(nuevoDecant);
 };
 
 export const obtenerDecantUsuario = async (req, res) => {

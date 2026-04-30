@@ -36,7 +36,7 @@ export const obtenerUsuarioPorEmailService = async (email) => {
   return usuarioEncontrado;
 };
 
-export const obtenerUsuarioPorIdService = async (id) => {
+export const  obtenerUsuarioPorIdService = async (id) => {
   const usuarioEncontrado = await usuario
     .findById(id)
     .populate("ordenes")

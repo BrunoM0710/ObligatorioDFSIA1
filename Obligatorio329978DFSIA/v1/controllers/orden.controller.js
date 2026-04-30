@@ -43,7 +43,7 @@ export const crearOrden = async (req, res) => {
   const nuevaOrden = await crearOrdenService(idUsuario, idPerfume);
 
   nuevaOrden.precio = perfume.precio;
-  perfume.stock -= 1;
+  perfume.stock -= 1; 
   await perfume.save();
   await nuevaOrden.save();
 
