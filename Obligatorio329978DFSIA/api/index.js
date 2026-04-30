@@ -1,3 +1,2 @@
-export default function handler(req, res) {
-  res.status(200).json({ ok: true });
-}
+import app from "../v1/app.js";
+export default app;
