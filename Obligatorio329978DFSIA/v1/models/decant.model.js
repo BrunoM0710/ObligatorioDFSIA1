@@ -12,6 +12,6 @@ const decantSchema = new mongoose.Schema({
     ref: "Perfume"
   }
 });
-
+ 
 const Decant = mongoose.model("Decant", decantSchema);
 export default Decant;
