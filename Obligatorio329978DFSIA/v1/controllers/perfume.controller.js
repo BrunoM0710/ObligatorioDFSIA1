@@ -55,6 +55,20 @@ export const bajaPerfume = async (req, res, next) => {
   }
 };
 
+export const obtenerPerfumePorId = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const perfume = await encontrarPerfumePorIdService(id);
+    if (!perfume) {
+      return res.status(404).json({ message: "Perfume no encontrado" });
+    }
+    res.status(200).json(perfume);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const obtenerPerfumes = async (req, res, next) => {
   const { page, limit } = req.query;
 
