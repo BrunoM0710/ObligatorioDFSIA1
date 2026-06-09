@@ -7,6 +7,7 @@ import {
   obtenerPerfumesPorProyeccionService,
   obtenerPerfumesPorConcentracionService,
   encontrarPorMarcaYNombreService,
+  obtenerPerfumePorIdService,
 } from "../services/perfumes.services.js";
 import { obtenerImagenPerfume } from "../services/unsplash.service.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -35,7 +36,7 @@ export const altaPerfume = async (req, res, next) => {
 
     const nuevoPerfume = await altaPerfumeService({
       ...req.body,
-      imagen: imagenUrl, 
+      imagen: imagenUrl,
     });
 
     return res.status(201).json(nuevoPerfume);
@@ -59,11 +60,8 @@ export const obtenerPerfumePorId = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const perfume = await encontrarPerfumePorIdService(id);
-    if (!perfume) {
-      return res.status(404).json({ message: "Perfume no encontrado" });
-    }
-    res.status(200).json(perfume);
+    const perfumeEncontrado = await obtenerPerfumePorIdService(id);
+    res.status(200).json(perfumeEncontrado);
   } catch (error) {
     next(error);
   }
