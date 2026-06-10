@@ -8,11 +8,6 @@ export const obtenerDecantUsuarioService = async (idUsuario, idDecant) => {
     _id: idDecant,
   });
 };
-// export const obtenerDecantService = async (idDecant) => {
-//   return await decant.findOne({
-//     decant: idDecant, 
-//   });
-// };
 
 export const eliminarDecantService = async (idDecant, idUsuario) => {
   const decantEliminado = await decant.findOneAndDelete({
