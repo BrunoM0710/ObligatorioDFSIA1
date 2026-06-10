@@ -13,13 +13,16 @@ const router = express.Router({ mergeParams: true });
 //rutas de login y registro de usuarios, sin token
 
 router.use("/auth", authRouter);
-router.use("/perfumes", perfumesRouter);
+router.get("/perfumes", perfumesRouter);
+router.get("/perfumes:id", perfumesRouter);
+
 
 //middleware para verificar tokens
 router.use(authenticateMiddleware);
 
 //acceso endpoints protegidos
-
+router.post("/perfumes", perfumesRouter);
+router.delete("/perfumes", perfumesRouter);
 router.use("/ordenes", ordenesRouter);
 router.use("/usuarios", usuariosRouter);
 router.use("/decant", decantRouter);
