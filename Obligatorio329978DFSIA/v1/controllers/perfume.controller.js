@@ -67,10 +67,10 @@ export const obtenerPerfumePorId = async (req, res, next) => {
 };
 
 export const obtenerPerfumes = async (req, res, next) => {
-  const { page, limit } = req.query;
+  const { page, limit, search = "" } = req.query;
 
   try {
-    const respuesta = await obtenerPerfumesService(page, limit);
+    const perfumes = await obtenerPerfumesService(page, limit, search);
     res.status(200).json(respuesta);
   } catch (error) {
     next(error);

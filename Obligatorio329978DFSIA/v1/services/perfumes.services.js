@@ -1,18 +1,50 @@
 import perfume from "../models/perfume.model.js";
 import { obtenerImagenPerfume } from "../services/unsplash.service.js";
 
-export const obtenerPerfumesService = async (page, limit) => {
-  limit = Number(limit) || 12; // Valor predeterminado de 12 si no se proporciona
-  page = Number(page) || 1; // Valor predeterminado de 1 si no se proporciona
-  const skip = (page - 1) * limit; // Calcular el número de documentos a omitir
-  const cantidadPerfumes = await perfume.countDocuments(); // Contar el total de perfumes en la base de datos
-  const totalPages = Math.ceil(cantidadPerfumes / limit); // Calcular el total de páginas
+export const obtenerPerfumesService = async (page, limit, search = "") => {
+  limit = Number(limit) || 12;
+
+  page = Number(page) || 1;
+
+  const skip = (page - 1) * limit;
+
+  const filtro = search
+    ? {
+        $or: [
+          {
+            nombre: {
+              $regex: search,
+              $options: "i",
+            },
+          },
+          {
+            marca: {
+              $regex: search,
+              $options: "i",
+            },
+          },
+        ],
+      }
+    : {};
+
+  const cantidadPerfumes = await perfume.countDocuments(filtro);
+
+  const totalPages = Math.ceil(cantidadPerfumes / limit);
+
   try {
-    const perfumes = await perfume.find().limit(limit).skip(skip);
-    return { perfumes, page, limit, totalPages };
+    const perfumes = await perfume.find(filtro).limit(limit).skip(skip);
+
+    return {
+      perfumes,
+      page,
+      limit,
+      totalPages,
+    };
   } catch (error) {
     const errorNuevo = new Error(error.message);
+
     errorNuevo.statusCode = 500;
+
     throw errorNuevo;
   }
 };
