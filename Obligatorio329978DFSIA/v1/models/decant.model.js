@@ -13,19 +13,15 @@ const decantSchema = new mongoose.Schema({
   },
   perfumeNombre: {
     type: String,
-    required: true,
   },
   perfumeMarca: {
     type: String,
-    required: true,
   },
   perfumeImagen: {
     type: String,
-    required: true,
   },
   perfumeConcentracion: {
     type: String,
-    required: true,
   },
 });
 
