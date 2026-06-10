@@ -42,9 +42,9 @@ export const crearOrden = async (req, res) => {
 
   const nuevaOrden = await crearOrdenService(usuario, perfume);
   usuario.ordenes.push(nuevaOrden._id);
-
+  perfume.stock - 1;
+  await perfume.save();
   await usuario.save();
-
   await nuevaOrden.save();
 
   return res.status(201).json(nuevaOrden);
