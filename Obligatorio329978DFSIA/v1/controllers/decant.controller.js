@@ -13,7 +13,7 @@ export const altaDecant = async (req, res) => {
   const { idUsuario, idPerfume } = req.params;
   const usuario = await obtenerUsuarioPorIdService(idUsuario);
   const perfume = await obtenerPerfumePorIdService(idPerfume);
-  const decantUsuario = await obtenerDecantUsuarioService(idUsuario, idPerfume);
+  const decantUsuario = await obtenerDecantPorIdService(idUsuario, idPerfume);
 
   if (!usuario) {
     const error = new Error("Usuario no encontrado");
