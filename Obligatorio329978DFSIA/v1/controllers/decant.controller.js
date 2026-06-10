@@ -7,6 +7,7 @@ import { obtenerPerfumePorIdService } from "../services/perfumes.services.js";
 import {
   obtenerDecantUsuarioService,
   eliminarDecantService,
+  obtenerDecantService,
 } from "../services/decant.services.js";
 
 export const altaDecant = async (req, res) => {
@@ -22,7 +23,7 @@ export const altaDecant = async (req, res) => {
   }
   if (!perfume) {
     const error = new Error("Perfume no encontrado");
-    error.statusCode = 404; 
+    error.statusCode = 404;
     throw error;
   }
 
@@ -105,4 +106,15 @@ export const eliminarDecant = async (req, res) => {
   await usuarioEncontrado.save();
 
   return res.status(204).send();
+
+  export const obtenerDecant = async (req, res) => {
+    const { idDecant } = req.params;
+    const decantEncontrado = await obtenerDecantService(idDecant);
+    if (!decantEncontrado) {
+      const error = new Error("Decant no encontrado");
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json(decantEncontrado);
+  };
 };
