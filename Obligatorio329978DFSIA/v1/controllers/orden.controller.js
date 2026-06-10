@@ -40,10 +40,11 @@ export const crearOrden = async (req, res) => {
     return res.status(400).json({ message: "Perfume sin stock" });
   }
 
-  const nuevaOrden = await crearOrdenService(idUsuario, perfume);
-
+  const nuevaOrden = await crearOrdenService(usuario, perfume);
   usuario.ordenes.push(nuevaOrden._id);
+
   await usuario.save();
+
   await nuevaOrden.save();
 
   return res.status(201).json(nuevaOrden);

@@ -2,7 +2,7 @@ import orden from "../models/orden.model.js";
 import perfume from "../models/perfume.model.js";
 import { obtenerPerfumePorIdService } from "./perfumes.services.js";
 
-export const crearOrdenService = async (idUsuario, perfume) => {
+export const crearOrdenService = async (usuario, perfume) => {
   try {
     const ordenCreada = new orden({
       usuario: usuario._id,
@@ -19,7 +19,7 @@ export const crearOrdenService = async (idUsuario, perfume) => {
 
       perfumeConcentracion: perfume.concentracion,
     });
-    await ordenCreada.save();
+
     return ordenCreada;
   } catch (error) {
     throw new Error(error.message);
