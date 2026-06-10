@@ -52,11 +52,3 @@ export const cambioDePlanUsuario = async (req, res) => {
   res.status(204).send();
 };
 
-export const obtenerDecantUsuarioService = async (id) => {
-  try {
-    const usuarioEncontrado = await usuario.findById(id).populate("decant");
-    return usuarioEncontrado.decant;
-  } catch (error) {
-    throw new Error("Error al obtener el decant del usuario");
-  }
-};
