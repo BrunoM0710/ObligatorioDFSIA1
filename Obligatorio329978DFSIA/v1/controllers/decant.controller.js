@@ -5,7 +5,7 @@ import perfume from "../models/perfume.model.js";
 import { obtenerUsuarioPorIdService } from "../services/usuario.services.js";
 import { obtenerPerfumePorIdService } from "../services/perfumes.services.js";
 import {
-  obtenerDecantUsuarioService,
+  obtenerDecantPorIdService,
   eliminarDecantService,
 } from "../services/decant.services.js";
 
@@ -56,7 +56,7 @@ export const obtenerDecantUsuario = async (req, res) => {
     if (!usuarioEncontrado) {
       throw new Error("Usuario no encontrado");
     }
-    const decantUsuario = await obtenerDecantUsuarioService(
+    const decantUsuario = await obtenerDecantPorIdService(
       req.params.idUsuario,
       req.params.idDecant,
     );
