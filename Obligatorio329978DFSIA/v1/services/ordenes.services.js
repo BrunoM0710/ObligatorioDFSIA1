@@ -1,13 +1,23 @@
 import orden from "../models/orden.model.js";
 import perfume from "../models/perfume.model.js";
-import {obtenerPerfumePorIdService} from "./perfumes.services.js";
+import { obtenerPerfumePorIdService } from "./perfumes.services.js";
 
-export const crearOrdenService = async (idUsuario, idPerfumes) => {
+export const crearOrdenService = async (idUsuario, perfume) => {
   try {
     const ordenCreada = new orden({
-      usuario: idUsuario,
-      perfume: idPerfumes,
-      precio: 0, 
+      usuario: usuario._id,
+
+      perfume: perfume._id,
+
+      precio: perfume.precio,
+
+      perfumeNombre: perfume.nombre,
+
+      perfumeMarca: perfume.marca,
+
+      perfumeImagen: perfume.imagen,
+
+      perfumeConcentracion: perfume.concentracion,
     });
     await ordenCreada.save();
     return ordenCreada;
