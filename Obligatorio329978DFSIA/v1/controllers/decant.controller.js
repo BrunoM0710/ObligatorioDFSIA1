@@ -37,6 +37,10 @@ export const altaDecant = async (req, res) => {
   const nuevoDecant = new decant({
     usuario: usuario._id,
     perfume: perfume._id,
+    perfumeNombre: perfume.nombre,
+    perfumeMarca: perfume.marca,
+    perfumeImagen: perfume.imagen,
+    perfumeConcentracion: perfume.concentracion,
   });
   await nuevoDecant.save();
   usuario.decant.push(nuevoDecant._id);
