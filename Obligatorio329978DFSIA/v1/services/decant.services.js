@@ -10,7 +10,7 @@ export const obtenerDecantUsuarioService = async (idUsuario, idDecant) => {
 };
 export const obtenerDecantService = async (idDecant) => {
   return await decant.findOne({
-    decant: idDecant,
+    decant: idDecant, 
   });
 };
 
