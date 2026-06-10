@@ -8,7 +8,7 @@ import {
 const router = express.Router({ mergeParams: true });
 
 router.get("/:idUsuario", obtenerDecantUsuario);
-router.get("/:idDecant", obtenerDecant);
+// router.get("/:idDecant", obtenerDecant);
 
 router.delete("/:idDecant-:idUsuario", eliminarDecant);
 
