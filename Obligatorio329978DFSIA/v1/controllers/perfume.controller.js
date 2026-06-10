@@ -71,7 +71,7 @@ export const obtenerPerfumes = async (req, res, next) => {
 
   try {
     const perfumes = await obtenerPerfumesService(page, limit, search);
-    res.status(200).json(respuesta);
+    res.status(200).json(perfumes);
   } catch (error) {
     next(error);
   }
