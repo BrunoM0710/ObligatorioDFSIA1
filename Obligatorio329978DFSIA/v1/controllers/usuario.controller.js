@@ -48,7 +48,7 @@ export const obtenerDecantUsuario = async (req, res) => {
 export const cambioDePlanUsuario = async (req, res) => {
   const { id } = req.params;
 
-  const cambioPlan = await cambioDePlanUsuarioService(id);
-  res.status(204).send();
-};
+  const usuario = await cambioDePlanUsuarioService(id);
 
+  res.status(200).json(usuario);
+};
