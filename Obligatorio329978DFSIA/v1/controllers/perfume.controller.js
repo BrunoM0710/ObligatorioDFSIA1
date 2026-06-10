@@ -16,7 +16,6 @@ import { uploadBufferToCloudinary } from "../utils/cloudinary.util.js";
 import cloudinary from "../config/cloudinary.js";
 export const altaPerfume = async (req, res, next) => {
   try {
-    // 👇 procesa imagen si viene
     await runMulterSingle(upload, "imagen", req, res);
 
     let imagenUrl = null;

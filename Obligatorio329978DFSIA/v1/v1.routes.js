@@ -13,13 +13,13 @@ const router = express.Router({ mergeParams: true });
 //rutas de login y registro de usuarios, sin token
 
 router.use("/auth", authRouter);
+router.use("/perfumes", perfumesRouter);
 
 //middleware para verificar tokens
 router.use(authenticateMiddleware);
 
 //acceso endpoints protegidos
 
-router.use("/perfumes", perfumesRouter);
 router.use("/ordenes", ordenesRouter);
 router.use("/usuarios", usuariosRouter);
 router.use("/decant", decantRouter);
