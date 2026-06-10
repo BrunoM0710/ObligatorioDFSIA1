@@ -91,7 +91,7 @@ export const eliminarDecant = async (req, res) => {
     throw error;
   }
 
-  const decantUsuario = await obtenerDecantUsuarioService(idUsuario, idDecant);
+  const decantUsuario = await obtenerDecantPorIdService(idUsuario, idDecant);
 
   if (!decantUsuario) {
     const error = new Error("Decant no encontrado para este usuario");
@@ -101,8 +101,6 @@ export const eliminarDecant = async (req, res) => {
 
   await eliminarDecantService(idDecant, idUsuario);
 
-  usuarioEncontrado.decant.pull(idDecant);
-  await usuarioEncontrado.save();
 
   return res.status(204).send();
 };
