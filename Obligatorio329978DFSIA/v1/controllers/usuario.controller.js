@@ -5,6 +5,7 @@ import {
   eliminarUsuarioService,
   cambioDePlanUsuarioService,
   obtenerOrdenesDeUsuarioService,
+  obtenerDecantUsuarioService,
 } from "../services/usuario.services.js";
 
 export const obtenerOrdenesUsuario = async (req, res) => {
@@ -46,7 +47,16 @@ export const obtenerDecantUsuario = async (req, res) => {
 
 export const cambioDePlanUsuario = async (req, res) => {
   const { id } = req.params;
- 
+
   const cambioPlan = await cambioDePlanUsuarioService(id);
   res.status(204).send();
+};
+
+export const obtenerDecantUsuarioService = async (id) => {
+  try {
+    const usuarioEncontrado = await usuario.findById(id).populate("decant");
+    return usuarioEncontrado.decant;
+  } catch (error) {
+    throw new Error("Error al obtener el decant del usuario");
+  }
 };
