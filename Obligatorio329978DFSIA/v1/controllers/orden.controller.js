@@ -77,5 +77,5 @@ export const eliminarOrden = async (req, res) => {
 };
 export const obtenerOrdenPorId = async (req, res) => {
   const { idOrden } = req.params;
-  return obtenerOrdenPorId(idOrden)
+  return obtenerOrdenesPorIdService(idOrden)
 };
