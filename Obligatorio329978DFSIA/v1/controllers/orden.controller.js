@@ -52,25 +52,25 @@ export const crearOrden = async (req, res) => {
   return res.status(201).json(nuevaOrden);
 };
 export const eliminarOrden = async (req, res) => {
-  const { idUsuario, idOrden } = req.body;
+  const { idUsuario, idOrden } = req.params;
 
-  if (!idUsuario || !idOrden) {
-    return res.status(400).json({ message: "Faltan datos" });
-  }
-  const ordenEncontrada = await obtenerOrdenesPorIdService(idOrden);
   const usuarioEncontrado = await obtenerUsuarioPorIdService(idUsuario);
-  if (!ordenEncontrada) {
-    return res.status(404).json({ message: "Orden no encontrada" });
-  }
+
   if (!usuarioEncontrado) {
-    return res.status(404).json({ message: "Usuario no encontrada" });
+    return res.status(404).json({
+      message: "Usuario no encontrado",
+    });
   }
-  const ordenEliminada = await eliminarOrdenService(
-    usuarioEncontrado,
-    ordenEncontrada,
-  );
-  if (!ordenEliminada) {
-    return res.status(400).json({ message: "Algo salio mal" });
+
+  const ordenEncontrada = await obtenerOrdenesPorIdService(idOrden);
+
+  if (!ordenEncontrada) {
+    return res.status(404).json({
+      message: "Orden no encontrada",
+    });
   }
+
+  await eliminarOrdenService(idOrden, idUsuario);
+
   return res.status(204).send();
 };

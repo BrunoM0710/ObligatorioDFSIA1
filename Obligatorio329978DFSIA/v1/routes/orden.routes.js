@@ -9,6 +9,6 @@ const router = express.Router({ mergeParams: true });
 router.get("/:idUsuario", obtenerOrdenesPorUsuario);
 
 router.post("/", crearOrden);
-router.delete("/ordenes/:idUsuario-:idOrden", eliminarOrden);
+router.delete("/:idUsuario-:idOrden", eliminarOrden);
 
 export default router;

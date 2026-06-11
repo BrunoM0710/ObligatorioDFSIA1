@@ -37,20 +37,12 @@ export const obtenerOrdenesPorUsuarioService = async (idUsuario) => {
 };
 
 export const obtenerOrdenesPorIdService = async (idOrden) => {
-  const ordenEncontrada = await orden.find({ orden: idOrden });
-
-  if (!ordenEncontrada) {
-    throw new Error(error.message);
-  }
-  return ordenEncontrada;
+  return await orden.findById(idOrden);
 };
-export const eliminarOrdenService = async (usuario, orden) => {
-  const usuarioBuscado = await usuario.find({ usuario: usuario.idUsuario });
-  if (!usuarioBuscado) {
-    throw new Error(error.message);
-  }
+export const eliminarOrdenService = async (idOrden, idUsuario) => {
   const ordenEliminada = await orden.findOneAndDelete({
-    usuario: usuarioBuscado.idOrden,
+    _id: idOrden,
+    usuario: idUsuario,
   });
 
   if (!ordenEliminada) {
@@ -59,8 +51,11 @@ export const eliminarOrdenService = async (usuario, orden) => {
     throw error;
   }
 
-  await usuarioBuscado.findByIdAndUpdate(usuario.idUsuario, {
-    $pull: { orden: orden.idOrden },
+  await usuario.findByIdAndUpdate(idUsuario, {
+    $pull: {
+      ordenes: idOrden,
+    },
   });
-  return decantEliminado;
+
+  return ordenEliminada;
 };
