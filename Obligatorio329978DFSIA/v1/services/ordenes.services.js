@@ -1,6 +1,6 @@
 import orden from "../models/orden.model.js";
 import perfume from "../models/perfume.model.js";
-import usuario from "../models/perfume.usuario.js";
+import usuario from "../models/usuario.model.js";
 import { obtenerPerfumePorIdService } from "./perfumes.services.js";
 
 export const crearOrdenService = async (usuario, perfume) => {
