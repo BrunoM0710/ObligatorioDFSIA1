@@ -8,6 +8,7 @@ import {
 } from "../services/ordenes.services.js";
 import { obtenerUsuarioPorIdService } from "../services/usuario.services.js";
 import { obtenerPerfumePorIdService } from "../services/perfumes.services.js";
+import { obtenerDecantPorIdService } from "../services/decant.services.js";
 
 export const obtenerOrdenesPorUsuario = async (req, res) => {
   const { idUsuario } = req.params;
@@ -73,4 +74,8 @@ export const eliminarOrden = async (req, res) => {
   await eliminarOrdenService(idOrden, idUsuario);
 
   return res.status(204).send();
+};
+export const obtenerOrdenPorId = async (req, res) => {
+  const { idOrden } = req.params;
+  return obtenerOrdenPorId(idOrden)
 };
