@@ -75,7 +75,20 @@ export const eliminarOrden = async (req, res) => {
 
   return res.status(204).send();
 };
-export const obtenerOrdenPorId = async (req, res) => {
-  const { idOrden } = req.params;
-  return obtenerOrdenesPorIdService(idOrden)
+export const obtenerOrdenPorId = async (req, res, next) => {
+  try {
+    const { idOrden } = req.params;
+
+    const orden = await obtenerOrdenesPorIdService(idOrden);
+
+    if (!orden) {
+      return res.status(404).json({
+        message: "Orden no encontrada",
+      });
+    }
+
+    return res.status(200).json(orden);
+  } catch (error) {
+    next(error);
+  }
 };
