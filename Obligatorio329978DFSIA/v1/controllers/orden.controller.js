@@ -3,6 +3,8 @@ import orden from "../models/orden.model.js";
 import {
   obtenerOrdenesPorUsuarioService,
   crearOrdenService,
+  eliminarOrdenService,
+  obtenerOrdenesPorIdService,
 } from "../services/ordenes.services.js";
 import { obtenerUsuarioPorIdService } from "../services/usuario.services.js";
 import { obtenerPerfumePorIdService } from "../services/perfumes.services.js";
@@ -48,4 +50,27 @@ export const crearOrden = async (req, res) => {
   await nuevaOrden.save();
 
   return res.status(201).json(nuevaOrden);
+};
+export const eliminarOrden = async (req, res) => {
+  const { idUsuario, idOrden } = req.body;
+
+  if (!idUsuario || !idOrden) {
+    return res.status(400).json({ message: "Faltan datos" });
+  }
+  const ordenEncontrada = await obtenerOrdenesPorIdService(idOrden);
+  const usuarioEncontrado = await obtenerUsuarioPorIdService(idUsuario);
+  if (!ordenEncontrada) {
+    return res.status(404).json({ message: "Orden no encontrada" });
+  }
+  if (!usuarioEncontrado) {
+    return res.status(404).json({ message: "Usuario no encontrada" });
+  }
+  const ordenEliminada = await eliminarOrdenService(
+    usuarioEncontrado,
+    ordenEncontrada,
+  );
+  if (!ordenEliminada) {
+    return res.status(400).json({ message: "Algo salio mal" });
+  }
+  return res.status(204).send();
 };

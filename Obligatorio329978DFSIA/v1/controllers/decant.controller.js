@@ -22,7 +22,7 @@ export const altaDecant = async (req, res) => {
   }
   if (!perfume) {
     const error = new Error("Perfume no encontrado");
-    error.statusCode = 404; 
+    error.statusCode = 404;
     throw error;
   }
 
@@ -100,7 +100,6 @@ export const eliminarDecant = async (req, res) => {
   }
 
   await eliminarDecantService(idDecant, idUsuario);
-
 
   return res.status(204).send();
 };
