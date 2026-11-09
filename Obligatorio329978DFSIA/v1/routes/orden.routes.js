@@ -12,4 +12,4 @@ router.get("/estadisticas/perfumes", obtenerEstadisticasPerfumes);
 
 router.post("/", crearOrden);
 
-export default router;
+export default router; 
