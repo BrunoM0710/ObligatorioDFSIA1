@@ -34,7 +34,7 @@ export const obtenerEstadisticasPerfumesService = async () => {
         foreignField: "perfume",
         as: "ordenes",
       },
-    }, 
+    },
     {
       $project: {
         _id: 0,
