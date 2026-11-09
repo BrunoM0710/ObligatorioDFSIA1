@@ -34,3 +34,4 @@ export const loginUsuarioService = async (email, contrasenia) => {
   });
   return { usuario, token };
 };
+ 

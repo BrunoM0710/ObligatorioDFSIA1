@@ -21,3 +21,4 @@ export const obtenerImagenPerfume = async (nombre, marca) => {
     return null;
   }
 };
+ 

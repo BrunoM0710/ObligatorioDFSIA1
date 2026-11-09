@@ -1,26 +1,15 @@
 import orden from "../models/orden.model.js";
 import perfume from "../models/perfume.model.js";
-import usuario from "../models/usuario.model.js";
 import { obtenerPerfumePorIdService } from "./perfumes.services.js";
 
-export const crearOrdenService = async (usuario, perfume) => {
+export const crearOrdenService = async (idUsuario, idPerfumes) => {
   try {
     const ordenCreada = new orden({
-      usuario: usuario._id,
-
-      perfume: perfume._id,
-
-      precio: perfume.precio,
-
-      perfumeNombre: perfume.nombre,
-
-      perfumeMarca: perfume.marca,
-
-      perfumeImagen: perfume.imagen,
-
-      perfumeConcentracion: perfume.concentracion,
+      usuario: idUsuario,
+      perfume: idPerfumes,
+      precio: 0,
     });
-
+    await ordenCreada.save();
     return ordenCreada;
   } catch (error) {
     throw new Error(error.message);
@@ -36,26 +25,32 @@ export const obtenerOrdenesPorUsuarioService = async (idUsuario) => {
   }
 };
 
-export const obtenerOrdenesPorIdService = async (idOrden) => {
-  return await orden.findById(idOrden);
-};
-export const eliminarOrdenService = async (idOrden, idUsuario) => {
-  const ordenEliminada = await orden.findOneAndDelete({
-    _id: idOrden,
-    usuario: idUsuario,
-  });
-
-  if (!ordenEliminada) {
-    const error = new Error("Orden no encontrada");
-    error.statusCode = 404;
-    throw error;
-  }
-
-  await usuario.findByIdAndUpdate(idUsuario, {
-    $pull: {
-      ordenes: idOrden,
+export const obtenerEstadisticasPerfumesService = async () => {
+  const estadisticas = await perfume.aggregate([
+    {
+      $lookup: {
+        from: "ordenes",
+        localField: "_id",
+        foreignField: "perfume",
+        as: "ordenes",
+      },
     },
-  });
+    {
+      $project: {
+        _id: 0,
+        perfumeId: "$_id",
+        nombre: 1,
+        marca: 1,
+        cantidadCompras: { $size: "$ordenes" },
+      },
+    },
+    {
+      $sort: {
+        cantidadCompras: -1,
+        nombre: 1,
+      },
+    },
+  ]);
 
-  return ordenEliminada;
+  return estadisticas;
 };

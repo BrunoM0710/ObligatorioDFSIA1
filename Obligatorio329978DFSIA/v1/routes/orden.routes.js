@@ -2,14 +2,14 @@ import express from "express";
 import {
   obtenerOrdenesPorUsuario,
   crearOrden,
-  eliminarOrden,
-  obtenerOrdenPorId,
+  obtenerEstadisticasPerfumes,
 } from "../controllers/orden.controller.js";
 const router = express.Router({ mergeParams: true });
 
-router.get("/usuario/:idUsuario", obtenerOrdenesPorUsuario);
-router.get("/:idOrden", obtenerOrdenPorId);
+router.get("/:idUsuario", obtenerOrdenesPorUsuario);
+
+router.get("/estadisticas/perfumes", obtenerEstadisticasPerfumes);
+
 router.post("/", crearOrden);
-router.delete("/:idUsuario-:idOrden", eliminarOrden);
 
 export default router;

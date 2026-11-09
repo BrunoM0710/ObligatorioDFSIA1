@@ -3,12 +3,10 @@ import orden from "../models/orden.model.js";
 import {
   obtenerOrdenesPorUsuarioService,
   crearOrdenService,
-  eliminarOrdenService,
-  obtenerOrdenesPorIdService,
 } from "../services/ordenes.services.js";
 import { obtenerUsuarioPorIdService } from "../services/usuario.services.js";
 import { obtenerPerfumePorIdService } from "../services/perfumes.services.js";
-import { obtenerDecantPorIdService } from "../services/decant.services.js";
+import { obtenerEstadisticasPerfumesService } from "../services/ordenes.services.js";
 
 export const obtenerOrdenesPorUsuario = async (req, res) => {
   const { idUsuario } = req.params;
@@ -20,6 +18,18 @@ export const obtenerOrdenesPorUsuario = async (req, res) => {
       .json({ message: "No se encontraron órdenes para este usuario" });
   }
   res.status(200).json(ordenes);
+};
+
+export const obtenerEstadisticasPerfumes = async (req, res, next) => {
+  try {
+    const estadisticas = await obtenerEstadisticasPerfumesService();
+
+    res.status(200).json({
+      estadisticas,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const crearOrden = async (req, res) => {
@@ -43,52 +53,15 @@ export const crearOrden = async (req, res) => {
     return res.status(400).json({ message: "Perfume sin stock" });
   }
 
-  const nuevaOrden = await crearOrdenService(usuario, perfume);
-  usuario.ordenes.push(nuevaOrden._id);
-  perfume.stock = perfume.stock - 1;
+  const nuevaOrden = await crearOrdenService(idUsuario, idPerfume);
+
+  nuevaOrden.precio = perfume.precio;
+  perfume.stock -= 1;
   await perfume.save();
-  await usuario.save();
   await nuevaOrden.save();
 
+  usuario.ordenes.push(nuevaOrden._id);
+  await usuario.save();
+
   return res.status(201).json(nuevaOrden);
-};
-export const eliminarOrden = async (req, res) => {
-  const { idUsuario, idOrden } = req.params;
-
-  const usuarioEncontrado = await obtenerUsuarioPorIdService(idUsuario);
-
-  if (!usuarioEncontrado) {
-    return res.status(404).json({
-      message: "Usuario no encontrado",
-    });
-  }
-
-  const ordenEncontrada = await obtenerOrdenesPorIdService(idOrden);
-
-  if (!ordenEncontrada) {
-    return res.status(404).json({
-      message: "Orden no encontrada",
-    });
-  }
-
-  await eliminarOrdenService(idOrden, idUsuario);
-
-  return res.status(204).send();
-};
-export const obtenerOrdenPorId = async (req, res, next) => {
-  try {
-    const { idOrden } = req.params;
-
-    const orden = await obtenerOrdenesPorIdService(idOrden);
-
-    if (!orden) {
-      return res.status(404).json({
-        message: "Orden no encontrada",
-      });
-    }
-
-    return res.status(200).json(orden);
-  } catch (error) {
-    next(error);
-  }
 };

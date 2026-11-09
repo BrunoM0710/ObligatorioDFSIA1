@@ -14,7 +14,7 @@ export const eliminarUsuarioService = async (id) => {
     usuarioEncontrado.decant.length > 0
   ) {
     const error = new Error(
-      "No se puede eliminar un usuario con órdenes o decants pendientes",
+      "No se puede eliminar un usuario con órdenes o decants pendientes"
     );
     error.statusCode = 409;
     throw error;
@@ -36,7 +36,7 @@ export const obtenerUsuarioPorEmailService = async (email) => {
   return usuarioEncontrado;
 };
 
-export const obtenerUsuarioPorIdService = async (id) => {
+export const  obtenerUsuarioPorIdService = async (id) => {
   const usuarioEncontrado = await usuario
     .findById(id)
     .populate("ordenes")
@@ -51,27 +51,20 @@ export const obtenerUsuarioPorIdService = async (id) => {
 
 export const cambioDePlanUsuarioService = async (id) => {
   const usuarioActualizado = await usuario.findById(id);
-
   if (!usuarioActualizado) {
     const error = new Error("Usuario no encontrado");
-
     error.statusCode = 404;
-
     throw error;
   }
-
-  if (usuarioActualizado.esPremium) {
-    const error = new Error("El usuario ya es Premium");
-
+  if (usuarioActualizado.decant.length > 4) {
+    const error = new Error("No se puede cambiar el plan si tiene más de 4 decants");
     error.statusCode = 400;
-
     throw error;
   }
-
-  usuarioActualizado.esPremium = true;
-
+  !usuarioActualizado.esPremium
+    ? (usuarioActualizado.esPremium = true)
+    : (usuarioActualizado.esPremium = false);
   await usuarioActualizado.save();
-
   return usuarioActualizado;
 };
 

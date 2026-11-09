@@ -7,8 +7,8 @@ import {
   obtenerPerfumesPorProyeccionService,
   obtenerPerfumesPorConcentracionService,
   encontrarPorMarcaYNombreService,
-  obtenerPerfumePorIdService,
 } from "../services/perfumes.services.js";
+import { generarDescripcionPerfumeService } from "../services/ai.services.js";
 import { obtenerImagenPerfume } from "../services/unsplash.service.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { runMulterSingle } from "../utils/multer.util.js";
@@ -44,6 +44,34 @@ export const altaPerfume = async (req, res, next) => {
   }
 };
 
+export const generarDescripcionPerfume = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const perfumeEncontrado = await perfume.findById(id);
+
+    if (!perfumeEncontrado) {
+      const error = new Error("Perfume no encontrado");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const descripcion =
+      await generarDescripcionPerfumeService(perfumeEncontrado);
+
+    perfumeEncontrado.descripcion = descripcion;
+
+    await perfumeEncontrado.save();
+
+    res.status(200).json({
+      mensaje: "Descripción generada correctamente",
+      perfume: perfumeEncontrado,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const bajaPerfume = async (req, res, next) => {
   const { id } = req.params;
 
@@ -55,23 +83,12 @@ export const bajaPerfume = async (req, res, next) => {
   }
 };
 
-export const obtenerPerfumePorId = async (req, res, next) => {
-  const { id } = req.params;
-
-  try {
-    const perfumeEncontrado = await obtenerPerfumePorIdService(id);
-    res.status(200).json(perfumeEncontrado);
-  } catch (error) {
-    next(error);
-  }
-};
-
 export const obtenerPerfumes = async (req, res, next) => {
-  const { page, limit, search = "" } = req.query;
+  const { page, limit } = req.query;
 
   try {
-    const perfumes = await obtenerPerfumesService(page, limit, search);
-    res.status(200).json(perfumes);
+    const respuesta = await obtenerPerfumesService(page, limit);
+    res.status(200).json(respuesta);
   } catch (error) {
     next(error);
   }

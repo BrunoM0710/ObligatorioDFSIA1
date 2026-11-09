@@ -7,7 +7,7 @@ import {
   bajaPerfume,
   obtenerPerfumesPorProyeccion,
   obtenerPerfumesPorConcentracion,
-  obtenerPerfumePorId,
+  generarDescripcionPerfume,
 } from "../controllers/perfume.controller.js";
 import { validateBodyMiddleware } from "../middlewares/validatebody.middleware.js";
 
@@ -23,6 +23,6 @@ router.post("/", validateBodyMiddleware(agregarPerfumeSchema), altaPerfume);
 
 router.delete("/:id", bajaPerfume);
 
-router.get("/:id", obtenerPerfumePorId);
+router.patch("/:id/generar-descripcion", generarDescripcionPerfume);
 
-export default router; 
+export default router;

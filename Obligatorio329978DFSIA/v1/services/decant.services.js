@@ -2,7 +2,7 @@ import perfume from "../models/perfume.model.js";
 import decant from "../models/decant.model.js";
 import usuario from "../models/usuario.model.js";
 
-export const obtenerDecantPorIdService = async (idUsuario, idDecant) => {
+export const obtenerDecantUsuarioService = async (idUsuario, idDecant) => {
   return await decant.findOne({
     usuario: idUsuario,
     _id: idDecant,

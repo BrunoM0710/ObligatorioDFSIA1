@@ -5,25 +5,13 @@ const decantSchema = new mongoose.Schema({
   usuario: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Usuario",
-    required: true,
+    required: true
   },
   perfume: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Perfume",
-  },
-  perfumeNombre: {
-    type: String,
-  },
-  perfumeMarca: {
-    type: String,
-  },
-  perfumeImagen: {
-    type: String,
-  },
-  perfumeConcentracion: {
-    type: String,
-  },
+    ref: "Perfume"
+  }
 });
-
+ 
 const Decant = mongoose.model("Decant", decantSchema);
 export default Decant;

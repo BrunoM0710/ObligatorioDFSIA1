@@ -43,6 +43,10 @@ const perfumeSchema = new mongoose.Schema({
     required: false,
     default: null,
   },
+  descripcion: {
+    type: String,
+    required: true,
+  },
 });
 
 export default mongoose.model("perfume", perfumeSchema, "perfumes");
